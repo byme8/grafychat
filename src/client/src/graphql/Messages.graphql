@@ -1,0 +1,10 @@
+query getMessage($count: Int!){
+    messages(count: $count) {
+        id,
+        text,
+        author {
+          id,
+          name
+        }
+    }
+}
