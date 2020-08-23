@@ -8,3 +8,21 @@ query getMessage($count: Int!){
         }
     }
 }
+
+mutation addMessage($text: String!, $userId: Uuid!){
+  addMessage(text: $text, authorId: $userId) {
+    id,
+    text
+  }
+}
+
+subscription onMessage {
+  onMessage {
+    id,
+    text,
+    author {
+      id,
+      name
+    }
+  }
+}

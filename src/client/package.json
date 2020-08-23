@@ -14,13 +14,15 @@
     "@uifabric/fluent-theme": "^7.1.105",
     "@uifabric/icons": "^7.3.66",
     "@uifabric/react-hooks": "^7.4.12",
+    "apollo-link-ws": "^1.0.20",
     "axios": "^0.19.2",
     "graphql": "^15.3.0",
     "office-ui-fabric-react": "^7.0.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-hooks-global-state": "^1.0.1",
-    "react-router-dom": "^5.2.0"
+    "react-router-dom": "^5.2.0",
+    "subscriptions-transport-ws": "^0.9.18"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",

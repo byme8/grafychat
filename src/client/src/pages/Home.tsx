@@ -1,12 +1,37 @@
-import React from 'react'
-import { Stack, PrimaryButton, mergeStyles } from 'office-ui-fabric-react'
-import { useGetMessageQuery } from 'generated/graphql'
+import React, { useState, useEffect } from 'react'
+import { Stack, mergeStyles, TextField } from 'office-ui-fabric-react'
+import { useGetMessageQuery, useAddMessageMutation, useOnMessageSubscription } from 'generated/graphql'
+import { useUserStore, useMessagesStore } from '@services/Store'
 
 export default function Home() {
-  let { data: messages, loading } = useGetMessageQuery({ variables: { count: 10 } })
+  let { data: initialMessages, loading } = useGetMessageQuery({ variables: { count: 10 } })
+  let { data: onMessage } = useOnMessageSubscription({ variables: {} })
+  let [addMessageMutation] = useAddMessageMutation()
 
-  function onSend() {
+  let [user] = useUserStore()
+  let [messages, setMessages] = useMessagesStore()
+  let [newMessage, setNewMassage] = useState('')
 
+  useEffect(() => setMessages(initialMessages?.messages!), [initialMessages])
+  useEffect(() => {
+    if (!onMessage) {
+      return
+    }
+    setMessages([...messages, onMessage.onMessage])
+  }, [onMessage])
+
+  function onChange(event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, newValue?: string | undefined) {
+    setNewMassage(newValue ?? '')
+  }
+
+  function onEnter(event: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>) {
+    if (event.key !== 'Enter') {
+      return
+    }
+
+    addMessageMutation({ variables: { text: newMessage, userId: user?.id } })
+
+    setNewMassage('')
   }
 
   return (
@@ -20,10 +45,10 @@ export default function Home() {
       {loading
         ? <> Messages are loading... </>
         : <div>
-          {messages?.messages?.map(o => (<div key={o?.id}>{o?.id}: {o?.author?.name}: {o?.text} </div>))}
+          {messages?.map(o => (<div key={o?.id}>{o?.author?.name}: {o?.text} </div>))}
         </div>
       }
-      <PrimaryButton onClick={onSend}>Send</PrimaryButton>
+      <TextField onChange={onChange} onKeyPress={onEnter} value={newMessage} />
     </Stack>
   )
 }

@@ -3,7 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GrafyChat.GraphQL;
+using GrafyChat.Services;
+using HotChocolate;
 using HotChocolate.AspNetCore;
+using HotChocolate.AspNetCore.Subscriptions;
+using HotChocolate.AspNetCore.Voyager;
+using HotChocolate.Subscriptions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,7 +24,13 @@ namespace GrafyChat
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddGrafyChat();
+            services.AddGrafyGraphQL();
+
+            services.AddGraphQLSubscriptions();
+            services.AddInMemorySubscriptionProvider();
+
+            services.AddGrafyServices();
+
             services.AddControllers();
             services.AddWebSockets(o => { });
         }
@@ -36,11 +47,15 @@ namespace GrafyChat
                 .AllowAnyOrigin()
                 .AllowAnyHeader()
                 .AllowAnyMethod());
-            
+
             app.UseRouting();
             app.UseWebSockets();
-            app.UseGraphQL("/g");
-            
+            app.UseGraphQL("/g")
+               .UsePlayground("/g")
+               .UseVoyager("/g");
+
+            app.UseGraphQLSubscriptions();
+
             app.UseEndpoints(endpoints => endpoints.MapControllers());
         }
     }

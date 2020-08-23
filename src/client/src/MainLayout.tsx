@@ -1,29 +1,37 @@
-import React, { lazy, Suspense } from 'react'
+import React, { lazy, Suspense, useEffect } from 'react'
 
 import { Stack, mergeStyles } from 'office-ui-fabric-react'
 import { HashRouter, Switch, Route } from 'react-router-dom'
-import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client'
+import { ApolloProvider } from '@apollo/client'
+import { useUserStore } from '@services/Store'
+import { openAddUser } from '@services/Helpers'
+import client from 'Client'
 
 let Home = lazy(() => import('./pages/Home'))
-let Login = lazy(() => import('./pages/Login'))
+let AddUser = lazy(() => import('./pages/AddUser'))
 
-const client = new ApolloClient({
-  uri: 'https://localhost:5001/g',
-  cache: new InMemoryCache()
+let routerViewStyle = mergeStyles({
+  display: 'grid',
+  gridTemplateRows: 'auto 100%',
+  width: '100%',
+  height: '100%',
+  flex: 'auto'
+})
+
+let routerContainerStyle = mergeStyles({
+  margin: '0px 1%'
 })
 
 export function MainLayout() {
-  let routerViewStyle = mergeStyles({
-    display: 'grid',
-    gridTemplateRows: 'auto 100%',
-    width: '100%',
-    height: '100%',
-    flex: 'auto'
-  })
+  let [user] = useUserStore()
 
-  let routerContainerStyle = mergeStyles({
-    margin: '0px 1%'
-  })
+  useEffect(() => {
+    if (user?.id) {
+      return
+    }
+
+    openAddUser()
+  }, [user])
 
   return (
     <Stack
@@ -46,8 +54,8 @@ export function MainLayout() {
             <Suspense fallback={<div>Loading...</div>}>
               <div className={routerContainerStyle}>
                 <Switch>
+                  <Route path="/user" component={AddUser} />
                   <Route path="/" component={Home} />
-                  <Route path="/login" component={Login} />
                 </Switch>
               </div>
             </Suspense>
