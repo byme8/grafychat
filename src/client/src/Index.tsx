@@ -1,9 +1,9 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { MainLayout } from './MainLayout';
-import { mergeStyles } from 'office-ui-fabric-react';
-import { initializeIcons } from 'office-ui-fabric-react/lib/Icons';
-initializeIcons();
+import React from 'react'
+import ReactDOM from 'react-dom'
+import { MainLayout } from './MainLayout'
+import { mergeStyles } from 'office-ui-fabric-react'
+import { initializeIcons } from 'office-ui-fabric-react/lib/Icons'
+initializeIcons()
 
 // Inject some global styles
 mergeStyles({
@@ -14,6 +14,6 @@ mergeStyles({
       height: '100vh'
     }
   }
-});
+})
 
-ReactDOM.render(<MainLayout />, document.getElementById('app'));
+ReactDOM.render(<MainLayout />, document.getElementById('app'))

@@ -1,4 +1,4 @@
-import { createInMemoryStore } from '@hooks/usePersistentStore'
+import { createInMemoryStore } from '@hooks/useInMemoryStore'
 
 export interface IMessage {
   id: string,

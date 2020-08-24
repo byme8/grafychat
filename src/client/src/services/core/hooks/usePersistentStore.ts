@@ -1,23 +1,5 @@
-import { createGlobalState } from 'react-hooks-global-state'
 import { PersistentStorage } from '../Storage'
-
-export function createInMemoryStore<TValue>(value: TValue) {
-  let key = Object.keys(value)[0]
-  let stateKey = key as keyof TValue
-  let { useGlobalState } = createGlobalState(value)
-
-  function useStore() {
-    let [state, setState] = useGlobalState(stateKey)
-
-    function newSetState(state: TValue[keyof TValue]) {
-      setState(state)
-    }
-
-    return [state, newSetState] as [typeof state, typeof newSetState]
-  }
-
-  return useStore
-}
+import { createInMemoryStore } from './useInMemoryStore'
 
 export function createPersistentStore<TValue>(storageKey: string, value: TValue) {
   let key = Object.keys(value)[0]
